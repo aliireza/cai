@@ -21,3 +21,8 @@ def parse_arguments():
 
     
     return args
+
+def read_code(filename):
+    with open(filename, 'r') as file:
+        code = file.read()
+    return code

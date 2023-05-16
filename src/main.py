@@ -31,7 +31,7 @@ def main():
     task_passed = False
 
     while not task_passed:
-        generated_code = ai.submit_task(args.task, read_code(args.input))
+        generated_code = ai.submit_task(args.task, input_handler.read_code(args.input))
 
         compilable, error = compiler.compile_code(generated_code)
         if not compilable:
@@ -39,7 +39,7 @@ def main():
             continue
 
         if args.verify:
-            original_code = read_code(args.input)
+            original_code = input_handler.read_code(args.input)
             verification_passed, error = verifier.verify(original_code, generated_code)
             if not verification_passed:
                 ai.submit_error(error)

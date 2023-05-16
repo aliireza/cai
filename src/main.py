@@ -1,3 +1,8 @@
+import input_handler
+from ai_interface import AIInterface
+from compilation_check import CompilationCheck
+from verification import Verification
+from performance_check import PerformanceCheck
 import subprocess
 
 def check_tools_installed(tools):
@@ -9,52 +14,43 @@ def check_tools_installed(tools):
     return True
 
 def main():
-    
-    # Parse the command line arguments
-    args = parse_arguments()
 
-    # Check if the required tools are installed
-    if args.compile and not check_tools_installed(['gcc', 'g++', 'clang', 'clang++']):
+    if not check_tools_installed(['gcc', 'g++', 'clang', 'clang++', 'klee', 'ktest-tool']):
         return
+    
+    args = input_handler.parse_arguments()
 
-    # Read the code from the input file
-    with open(args.input, 'r') as f:
-        original_code = f.read()
+    ai = AIInterface(args.ai)
 
-    # Create an AIInterface object and submit the task
-    ai_interface = AIInterface(args.ai)
-    generated_code = ai_interface.submit_task(args.task, original_code)
+    compiler = CompilationCheck(args.language, args.compiler)
 
-    # Perform a compilation check if the -c option is specified
-    if args.compile:
-        compiler = CompilationCheck(args.language)
-        success, error = compiler.compile_code(generated_code)
-        if not success:
-            print(f"Compilation error: {error}")
-            # Handle the error, e.g., resubmit the task to the AI
-            return
+    verifier = Verification(args.verification_type) if args.verify else None
 
-    # Perform verification if the -v option is specified
-    if args.verify:
-        verifier = Verification('fuzzy')  # Or 'SE', depending on your requirements
-        success, error = verifier.verify(original_code, generated_code)
-        if not success:
-            print(f"Verification error: {error}")
-            # Handle the error, e.g., resubmit the task to the AI
-            return
+    performance_checker = PerformanceCheck(args.language) if args.performance else None
 
-    # Perform a performance check if the -p option is specified
-    if args.performance:
-        performance_checker = PerformanceCheck(args.language)
-        original_time = performance_checker.measure_performance(original_code)
-        generated_time = performance_checker.measure_performance(generated_code)
+    task_passed = False
 
-        if original_time is None or generated_time is None:
-            print("Performance check failed due to a runtime error.")
-            return
+    while not task_passed:
+        generated_code = ai.submit_task(args.task, read_code(args.input))
 
-        print(f"Original code execution time: {original_time} seconds")
-        print(f"Generated code execution time: {generated_time} seconds")
+        compilable, error = compiler.compile_code(generated_code)
+        if not compilable:
+            ai.submit_error(error)
+            continue
 
-if __name__ == '__main__':
-    main()
+        if args.verify:
+            original_code = read_code(args.input)
+            verification_passed, error = verifier.verify(original_code, generated_code)
+            if not verification_passed:
+                ai.submit_error(error)
+                continue
+
+        if args.performance:
+            performance = performance_checker.measure_performance(generated_code)
+            if performance is None or performance > 1.1:  # Performance criteria not met
+                ai.submit_error('Performance criteria not met')
+                continue
+
+        task_passed = True
+
+    print('Task passed all checks.')

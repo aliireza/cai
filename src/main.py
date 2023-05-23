@@ -30,12 +30,21 @@ def main():
 
     task_passed = False
 
+    print(input_handler.read_code(args.input))
+    print(args.task)
+
     while not task_passed:
         generated_code = ai.submit_task(args.task, input_handler.read_code(args.input))
+        if(generated_code is None):
+            return
+
+        print(generated_code)
 
         compilable, error = compiler.compile_code(generated_code)
+        print((error))
         if not compilable:
-            ai.submit_error(error)
+            task = "Fix all compilation errors: "+ error
+            generated_code = ai.submit_task(task,generated_code)
             continue
 
         if args.verify:
@@ -53,4 +62,9 @@ def main():
 
         task_passed = True
 
-    print('Task passed all checks.')
+        print('Task passed all checks.')
+        with open(args.output, 'w') as f:
+            f.write(generated_code)
+        print("Output code is written to "+args.output)
+
+main()

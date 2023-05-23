@@ -3,6 +3,7 @@ import argparse
 def parse_arguments():
     parser = argparse.ArgumentParser(description='AI Code Generator and Verifier')
     parser.add_argument('-i', '--input', type=str, required=True, help='Input file path')
+    parser.add_argument('-o', '--output', type=str, required=True, help='Output file path')
     parser.add_argument('-t', '--task', type=str, required=True, help='Task to be performed')
     parser.add_argument('-l', '--language', type=str, required=False, choices=['C', 'C++'], default='C++', help='Language of the code')
     parser.add_argument('-a', '--ai', type=str, required=False, choices=['GPT', 'BARD', 'BING'], default='BARD', help='Choice of AI')

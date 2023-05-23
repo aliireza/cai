@@ -72,6 +72,9 @@ class AIInterface:
         # Get response from BARD
         response = self.bard.get_answer(prompt)
         # Extract the code from the response and return it 
+        if('Error' in response.get('content')):
+             print("Error in BARD API.")
+             return None
         return self.get_code_bard(response.get('content'))
 
     def submit_task_bing(self, task, code):

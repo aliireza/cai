@@ -13,7 +13,7 @@ class AIInterface:
             pass
     
     def bard_init(self):
-        os.environ['_BARD_API_KEY']="Vwhx8JyYA9-focLZk2ZYTLkzHH5I1cb5cRnkRFBBE_mxt9ADhffOxZoLNDyRFmruHwZ7Pw."
+        os.environ['_BARD_API_KEY']="Wwhx8AwK1QPvP3LnsV9Mxs1zu-vNzoaUUfbEimU3ZBKSMNuQ2-t06Cqe0RCTrTs7s7kT8A."
         bardapi.api_key = os.environ.get('_BARD_API_KEY', 'Not Set')
         self.bard = bardapi.core.Bard()
 
@@ -72,6 +72,9 @@ class AIInterface:
         # Get response from BARD
         response = self.bard.get_answer(prompt)
         # Extract the code from the response and return it 
+        if('Error' in response.get('content')):
+             print("Error in BARD API.")
+             return None
         return self.get_code_bard(response.get('content'))
 
     def submit_task_bing(self, task, code):

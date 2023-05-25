@@ -33,7 +33,7 @@ def main():
 
     input_code = input_handler.read_code(args.input)
     input_task = args.task
-    compile_task = "If there is not main; add it and use this code. If there is compilation erros, fix all of them: "
+    compile_task = "If there is no main, add it and use this code. If there are compilation errors, fix all of them: "
     print(input_code)
     print(input_task)
 
@@ -55,16 +55,20 @@ def main():
         f.write(input_code)
     print("Output code is written to "+temp_input)
 
+    generated_code = input_code
+    current_task = input_task
+
     # Peform the main task
     while not task_passed:
-        generated_code = ai.submit_task(input_task, input_code)
+        generated_code = ai.submit_task(current_task, generated_code)
         if(generated_code is None):
             return
 
         print(generated_code)
 
         compilable, error = compiler.compile_code(generated_code)
-        print((error))
+        if(error is not None):
+            print(error)
         if not compilable:
             generated_code = ai.submit_task(compile_task + error, generated_code)
             continue
@@ -76,9 +80,13 @@ def main():
                 continue
 
         if args.performance:
+            if(performance_checker.code == ""):
+                performance_checker.generate_code(compiler,ai,input_code,generated_code)
+            print(performance_checker.code)
             performance = performance_checker.measure_performance(generated_code)
-            if performance is None or performance > 1.1:  # Performance criteria not met
-                ai.submit_error('Performance criteria not met')
+            if performance is None or performance < 1:  # Performance criteria not met
+                print('Performance criteria not met')
+                current_task = current_task + "performance criteria not met; improve again"
                 continue
 
         task_passed = True

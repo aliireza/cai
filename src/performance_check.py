@@ -1,27 +1,32 @@
 import time
+from compilation_check import CompilationCheck
+import subprocess
 
 class PerformanceCheck:
     def __init__(self, language):
         self.language = language
+        self.code = ""
+        self.prompt = "Your task is to benchmark the input functions and compare their performance. Write a main function to measure the performance of two functions (original and improved codes); add 50 test cases with different complexities to consider various corner cases and give me a better estimation of the time complexity of both programs; run each test case 5 times. I give you the original code and the improved code, and I expect to have one main function that benchmarks both functions and returns one number in the output (no comment, only a single number) that reports the speedup of the improved code (dividing the average time of the improved code by the average time of the original code). Give me only the code and no explanation; save tokens. Say nothing else."
+
+    def generate_code(self, compiler, ai, original_code, generated_code):
+        input_compilable = False
+        self.prompt = self.prompt + "\n\\original code\n"+original_code + "\n\\improved code\n" + generated_code
+        self.code = ai.submit_task( self.prompt, self.code)
+        compile_task = "If there is not main; add it and use this code. If there is compilation erros, fix all of them: "
+        
+        while not input_compilable:
+            compilable, error = compiler.compile_code(self.code)
+            print((error))
+            if not compilable:
+                self.code = ai.submit_task(compile_task + error, self.code)
+                continue
+            input_compilable = True
+
 
     def measure_performance(self, code):
-        with open('temp_code.c' if self.language == 'C' else 'temp_code.cpp', 'w') as f:
-            f.write(code)
-
-        if self.language == 'C':
-            compile_command = ['gcc', 'temp_code.c', '-o', 'temp_code']
-        else:  # C++
-            compile_command = ['g++', 'temp_code.cpp', '-o', 'temp_code']
-
-        process = subprocess.run(compile_command, text=True, capture_output=True)
-        if process.returncode != 0:  # Compilation error
-            return None
-
-        start = time.perf_counter()
         process = subprocess.run(['./temp_code'], text=True, capture_output=True)
-        end = time.perf_counter()
 
         if process.returncode != 0:  # Runtime error
             return None
 
-        return end - start  # Execution time
+        return process.stdout # Speedup

@@ -13,7 +13,7 @@ class AIInterface:
             pass
     
     def bard_init(self):
-        os.environ['_BARD_API_KEY']="Wwhx8AwK1QPvP3LnsV9Mxs1zu-vNzoaUUfbEimU3ZBKSMNuQ2-t06Cqe0RCTrTs7s7kT8A."
+        os.environ['_BARD_API_KEY']="Wwhx8FNAuAug0RlQbZc7x6HDPLwY4Iop7-snOja7IG3vBVpnI1KDw37rNKrnb_y1uWXy_Q."
         bardapi.api_key = os.environ.get('_BARD_API_KEY', 'Not Set')
         self.bard = bardapi.core.Bard()
 

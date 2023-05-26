@@ -1,5 +1,6 @@
 import bardapi
 import openai
+from EdgeGPT import Query, Cookie
 import os
 
 class AIInterface:
@@ -8,14 +9,26 @@ class AIInterface:
         if ai_choice == 'BARD':
             self.bard_init()
         elif ai_choice == 'BING':
-            pass
+            self.bing_init()
         elif ai_choice == 'GPT':
             self.gpt_init()
     
     def bard_init(self):
-        os.environ['_BARD_API_KEY']="Wwhx8FNAuAug0RlQbZc7x6HDPLwY4Iop7-snOja7IG3vBVpnI1KDw37rNKrnb_y1uWXy_Q."
+        os.environ['_BARD_API_KEY']="Wwhx8AwK1QPvP3LnsV9Mxs1zu-vNzoaUUfbEimU3ZBKSMNuQ2-t06Cqe0RCTrTs7s7kT8A."
         bardapi.api_key = os.environ.get('_BARD_API_KEY', 'Not Set')
         self.bard = bardapi.core.Bard()
+
+    def bing_init(self):
+        os.environ['BING_U']=""
+        self.bing = Query
+        self.style = "precise" #creative, balanced, or precise
+        self.content_type = "text" # "text" for Bing Chat; "image" for Dall-e
+        self.cookie_file = "./bing_cookies_1.json"
+        c = Cookie()
+        c.current_filepath=self.cookie_file
+        c.import_data()
+        # echo - Print something to confirm request made
+        # echo_prompt - Print confirmation of the evaluated prompt
 
     def gpt_init(self):
         os.environ['OPENAI_API_KEY']="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"
@@ -56,6 +69,9 @@ class AIInterface:
         temperature=self.temperature, 
     )
         # Extract the code from the response and return it 
+        if('Error' in response):
+             print("Error in OpenAI API.")
+             return None
         return self.get_code_gpt(response.choices[0].message["content"])
 
     def get_code_bard(self, input):
@@ -79,5 +95,12 @@ class AIInterface:
         return self.get_code_bard(response.get('content'))
 
     def submit_task_bing(self, task, code):
-        # Insert BING specific code here
-        pass
+        # Create a prompt 
+        prompt = task + "\n" + code
+        # Get response from Bing
+        response = self.bing(prompt,self.style,self.content_type,0,echo=True,echo_prompt=True)
+        # Extract the code from the response and return it 
+        if('Error' in response.output):
+             print("Error in Bing API.")
+             return None
+        return response.code

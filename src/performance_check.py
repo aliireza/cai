@@ -23,7 +23,7 @@ class PerformanceCheck:
 
 
     def measure_performance(self, code):
-        process = subprocess.run(['./perf_code'], text=True, capture_output=True)
+        process = subprocess.run(['./perf_code.out'], text=True, capture_output=True)
 
         if process.returncode != 0:  # Runtime error
             return None

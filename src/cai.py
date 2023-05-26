@@ -62,7 +62,7 @@ def main():
     # Peform the main task
     while not task_passed:
         generated_code = ai.submit_task(current_task, generated_code)
-        if(generated_code is None):
+        if(generated_code == ""):
             return
 
         print(generated_code)

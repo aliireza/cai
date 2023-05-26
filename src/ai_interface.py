@@ -10,7 +10,7 @@ class AIInterface:
         elif ai_choice == 'BING':
             pass
         elif ai_choice == 'GPT':
-            pass
+            self.gpt_init()
     
     def bard_init(self):
         os.environ['_BARD_API_KEY']="Wwhx8FNAuAug0RlQbZc7x6HDPLwY4Iop7-snOja7IG3vBVpnI1KDw37rNKrnb_y1uWXy_Q."
@@ -20,7 +20,7 @@ class AIInterface:
     def gpt_init(self):
         os.environ['OPENAI_API_KEY']="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"
         openai.api_key = os.environ.get('OPENAI_API_KEY', 'Not Set')
-        self.gpt = openai()
+        self.gpt = openai
         self.model="gpt-3.5-turbo"
         '''A temperature of 0 means the responses will be very straightforward, almost deterministic (meaning you almost always get the same response to a given prompt)
         A temperature of 1 means the responses can vary wildly.'''
@@ -48,10 +48,11 @@ class AIInterface:
     def submit_task_gpt(self, task, code):
         # Create a prompt 
         prompt = task + "\n" + code
+        messages = [{"role": "user", "content": prompt}]
         # Get response from GPT
         response = self.gpt.ChatCompletion.create(
         model=self.model,
-        messages=prompt,
+        messages=messages,
         temperature=self.temperature, 
     )
         # Extract the code from the response and return it 

@@ -9,10 +9,10 @@ class CompilationCheck:
         input_file = name+'.c' if self.language == 'C' else name+'.cpp'
         output_file = name if SE == 0 else name+'.bc'
         se_compiler = 'clang' if self.language == 'C' else 'clang++'
-        with open('temp_code.c' if self.language == 'C' else 'temp_code.cpp', 'w') as f:
+        with open(input_file, 'w') as f:
             f.write(code)
 
-        if SE is 1:
+        if SE == 1:
             compile_command = [ se_compiler, '-I', '/usr/local/include/klee/klee.h', '-emit-llvm', '-c', '-g', '-O0', '-Xclang', '-disable-O0-optnone', input_file, '-o', output_file]
         else:
                 compile_command = [ self.compiler, input_file, '-o', output_file]

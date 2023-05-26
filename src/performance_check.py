@@ -4,7 +4,7 @@ import subprocess
 class PerformanceCheck:
     def __init__(self, language):
         self.language = language
-        self.code = None
+        self.code = ""
         self.prompt = "Your task is to benchmark the input functions and compare their performance. Write a main function to measure the performance of two functions (original and improved codes); add 50 test cases with different complexities to consider various corner cases and give me a better estimation of the time complexity of both programs; run each test case 5 times. I give you the original code and the improved code, and I expect to have one main function that benchmarks both functions and returns one number in the output (no comment, only a single number) that reports the speedup of the improved code (dividing the average time of the improved code by the average time of the original code). Give me only the code and no explanation; save tokens. Say nothing else."
 
     def generate_code(self, compiler, ai, original_code, generated_code):
@@ -14,7 +14,7 @@ class PerformanceCheck:
         compile_task = "If there is not main; add it and use this code. If there is compilation erros, fix all of them: "
         
         while not input_compilable:
-            compilable, error = compiler.compile_code(self.code)
+            compilable, error = compiler.compile_code(self.code, name='perf_code')
             print((error))
             if not compilable:
                 self.code = ai.submit_task(compile_task + error, self.code)
@@ -23,7 +23,7 @@ class PerformanceCheck:
 
 
     def measure_performance(self, code):
-        process = subprocess.run(['./temp_code'], text=True, capture_output=True)
+        process = subprocess.run(['./perf_code'], text=True, capture_output=True)
 
         if process.returncode != 0:  # Runtime error
             return None

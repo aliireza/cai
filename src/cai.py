@@ -25,7 +25,7 @@ def main():
 
     compiler = CompilationCheck(args.language, args.compiler)
 
-    verifier = Verification(args.verification_type) if args.verify else None
+    verifier = Verification()
 
     performance_checker = PerformanceCheck(args.language) if args.performance else None
 
@@ -33,7 +33,7 @@ def main():
 
     input_code = input_handler.read_code(args.input)
     input_task = args.task
-    compile_task = "If there is no main, add it and use this code. If there are compilation errors, fix all of them: "
+    compile_task = "If there is no main, add it and use this code/functioin. If there are compilation errors, fix all of them: "
     verifier_task = "I got these errors from KLEE. Please fix all of them: "
     print(input_code)
     print(input_task)
@@ -81,7 +81,7 @@ def main():
                 continue
 
         if args.performance:
-            if(performance_checker.code == None):
+            if(performance_checker.code == ''):
                 performance_checker.generate_code(compiler,ai,input_code,generated_code)
             print(performance_checker.code)
             performance = performance_checker.measure_performance(generated_code)

@@ -7,7 +7,7 @@ class CompilationCheck:
 
     def compile_code(self, code, SE=0, name='temp_code'):
         input_file = name+'.c' if self.language == 'C' else name+'.cpp'
-        output_file = name if SE == 0 else name+'.bc'
+        output_file = name+'.out' if SE == 0 else name+'.bc'
         se_compiler = 'clang' if self.language == 'C' else 'clang++'
         with open(input_file, 'w') as f:
             f.write(code)

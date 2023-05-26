@@ -34,6 +34,7 @@ def main():
     input_code = input_handler.read_code(args.input)
     input_task = args.task
     compile_task = "If there is no main, add it and use this code. If there are compilation errors, fix all of them: "
+    verifier_task = "I got these errors from KLEE. Please fix all of them: "
     print(input_code)
     print(input_task)
 
@@ -74,13 +75,13 @@ def main():
             continue
 
         if args.verify:
-            verification_passed, error = verifier.verify(input_code, generated_code)
+            verification_passed, error = verifier.verify(compiler, ai, input_code, generated_code)
             if not verification_passed:
-                ai.submit_error(error)
+                generated_code = ai.submit_task(verifier_task + error, generated_code)
                 continue
 
         if args.performance:
-            if(performance_checker.code == ""):
+            if(performance_checker.code == None):
                 performance_checker.generate_code(compiler,ai,input_code,generated_code)
             print(performance_checker.code)
             performance = performance_checker.measure_performance(generated_code)

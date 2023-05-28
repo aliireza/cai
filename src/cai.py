@@ -97,4 +97,5 @@ def main():
             f.write(generated_code)
         print("Output code is written to "+args.output)
 
-main()
+if __name__ == "__main__":
+    main()

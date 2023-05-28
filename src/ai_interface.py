@@ -1,7 +1,7 @@
 import bardapi
 import openai
 from EdgeGPT import Query, Cookie
-import os
+import os,sys
 
 class AIInterface:
     def __init__(self, ai_choice):
@@ -71,7 +71,7 @@ class AIInterface:
         # Extract the code from the response and return it 
         if('Error' in response):
              print("Error in OpenAI API.")
-             return None
+             sys.exit(1)
         return self.get_code_gpt(response.choices[0].message["content"])
 
     def get_code_bard(self, input):
@@ -91,7 +91,7 @@ class AIInterface:
         # Extract the code from the response and return it 
         if('Error' in response.get('content')):
              print("Error in BARD API.")
-             return None
+             sys.exit(1)
         return self.get_code_bard(response.get('content'))
 
     def submit_task_bing(self, task, code):
@@ -102,5 +102,5 @@ class AIInterface:
         # Extract the code from the response and return it 
         if('Error' in response.output):
              print("Error in Bing API.")
-             return None
+             sys.exit(1)
         return response.code

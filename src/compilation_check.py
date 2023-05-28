@@ -1,4 +1,6 @@
 import subprocess
+from colorama import Fore, Back, Style
+from colorama import Fore, Back, Style
 
 class CompilationCheck:
     def __init__(self,lagnuage, compiler):
@@ -17,6 +19,7 @@ class CompilationCheck:
         else:
                 compile_command = [ self.compiler, input_file, '-o', output_file]
 
+        print(Fore.YELLOW + "Compiling code..." + Style.RESET_ALL)
         process = subprocess.run(compile_command, text=True, capture_output=True)
 
         if process.returncode != 0:  # Compilation error

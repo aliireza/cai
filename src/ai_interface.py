@@ -1,6 +1,7 @@
 import bardapi
 import openai
 from EdgeGPT import Query, Cookie
+from colorama import Fore, Back, Style
 import os,sys
 
 class AIInterface:
@@ -38,6 +39,7 @@ class AIInterface:
         '''A temperature of 0 means the responses will be very straightforward, almost deterministic (meaning you almost always get the same response to a given prompt)
         A temperature of 1 means the responses can vary wildly.'''
         self.temperature=0
+        self.submit_task_gpt("Always give me only code with syntax highlighting; for example ```c++ int main()```","", "system")
 
     def submit_task(self, task, code):
         if self.ai_choice == 'GPT':
@@ -58,10 +60,10 @@ class AIInterface:
         return code
     
     #TODO: Check this function with the GPT API
-    def submit_task_gpt(self, task, code):
+    def submit_task_gpt(self, task, code, role = "user"):
         # Create a prompt 
         prompt = task + "\n" + code
-        messages = [{"role": "user", "content": prompt}]
+        messages = [{"role": role, "content": prompt}]
         # Get response from GPT
         response = self.gpt.ChatCompletion.create(
         model=self.model,
@@ -70,7 +72,7 @@ class AIInterface:
     )
         # Extract the code from the response and return it 
         if('Error' in response):
-             print("Error in OpenAI API.")
+             print(Fore.RED + "Error in OpenAI API." + Style.RESET_ALL)
              sys.exit(1)
         return self.get_code_gpt(response.choices[0].message["content"])
 
@@ -90,7 +92,8 @@ class AIInterface:
         response = self.bard.get_answer(prompt)
         # Extract the code from the response and return it 
         if('Error' in response.get('content')):
-             print("Error in BARD API.")
+             
+             print(Fore.RED + "Error in BARD API." + Style.RESET_ALL)
              sys.exit(1)
         return self.get_code_bard(response.get('content'))
 
@@ -101,6 +104,6 @@ class AIInterface:
         response = self.bing(prompt,self.style,self.content_type,0,echo=True,echo_prompt=True)
         # Extract the code from the response and return it 
         if('Error' in response.output):
-             print("Error in Bing API.")
+             print(Fore.RED + "Error in Bing API." + Style.RESET_ALL)
              sys.exit(1)
         return response.code

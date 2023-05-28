@@ -10,6 +10,7 @@ class PerformanceCheck:
     def generate_code(self, compiler, ai, original_code, generated_code):
         input_compilable = False
         self.prompt = self.prompt + "\n\\original code\n"+original_code + "\n\\improved code\n" + generated_code
+        print(Fore.YELLOW + "Generating code..." + Style.RESET_ALL)
         self.code = ai.submit_task( self.prompt, self.code)
         compile_task = "If there is not main; add it and use this code. If there is compilation erros, fix all of them: "
         
@@ -23,6 +24,7 @@ class PerformanceCheck:
 
 
     def measure_performance(self, code):
+        print(Fore.YELLOW + "Measuring performance..." + Style.RESET_ALL)
         process = subprocess.run(['./perf_code.out'], text=True, capture_output=True)
 
         if process.returncode != 0:  # Runtime error

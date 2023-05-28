@@ -1,4 +1,5 @@
 import subprocess
+from colorama import Fore, Back, Style
 
 class Verification:
     def __init__(self):
@@ -13,6 +14,7 @@ class Verification:
     def generate_code(self, compiler, ai, original_code, generated_code):
         input_compilable = False
         self.prompt = self.prompt + "\n\\original code\n"+original_code + "\n\\improved code\n" + generated_code
+        print(Fore.YELLOW + "Generating code..." + Style.RESET_ALL)
         self.code = ai.submit_task( self.prompt, self.code)
         compile_task = "If there is not main; add it and use this code. If there is compilation erros, fix all of them: "
         
@@ -26,6 +28,7 @@ class Verification:
 
     def se_verification(self, compiler, original_code, generated_code):
         klee_command = [ 'klee', 'klee_code.bc']
+        print(Fore.YELLOW + "Running KLEE..." + Style.RESET_ALL)
         process = subprocess.run(klee_command, text=True, capture_output=True)
         if process.returncode != 0:  # Compilation error
             return False, process.stderr

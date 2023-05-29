@@ -1,4 +1,5 @@
-# CodeAI (CAI): Code Optimization & Enhancement with AI
+# CodeAI (CAI): Code Optimization & Enhancement with AI [![Python Application](https://github.com/aliireza/cai/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/aliireza/cai/actions/workflows/ci.yml)
+
 A Python program that automatically changes an input C/C++ code, ensuring compilability, correctness, and performance.
 You should use a US VPN to interact with the BARD API (i.e., it is not supported in Sweden).
 

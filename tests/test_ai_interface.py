@@ -1,10 +1,10 @@
 # python -m unittest test_ai_interface.py
 import unittest
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 import sys
+import ai_interface
 sys.path.insert(0, '../src/')
 
-import ai_interface
 
 class TestAIInterface(unittest.TestCase):
     @patch('ai_interface.bardapi.core.Bard')
@@ -14,10 +14,10 @@ class TestAIInterface(unittest.TestCase):
         ai = ai_interface.AIInterface('BARD')
         self.assertEqual(ai.ai_choice, 'BARD')
         MockInit.assert_called_once()
-        
+
     @patch('ai_interface.bardapi.core.Bard')
     @patch('ai_interface.AIInterface.bard_init', return_value=None)
-    def test_get_code_bard(self,MockInit, MockBard):
+    def test_get_code_bard(self, MockInit, MockBard):
         ai = ai_interface.AIInterface('BARD')
         input = 'This is a test c++ Here is some code ```c++\nint a =1;```'
         expected = 'int a =1;'
@@ -52,6 +52,7 @@ int main() {
 }'''
         self.assertEqual(ai.submit_task_bard(task, code), expected)
         MockBard.return_value.get_answer.assert_called_once_with(task + "\n" + code)
+
 
 if __name__ == '__main__':
     unittest.main()

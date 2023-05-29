@@ -3,8 +3,8 @@ import unittest
 from unittest.mock import patch
 import sys
 sys.path.insert(0, '../src/')
-
 import verification
+
 
 class TestVerification(unittest.TestCase):
     @patch('verification.run_KLEE')
@@ -15,6 +15,7 @@ class TestVerification(unittest.TestCase):
         self.assertEqual(test_cases, ['test_case_1', 'test_case_2'])
 
     # Add more test cases as needed
+
 
 if __name__ == '__main__':
     unittest.main()

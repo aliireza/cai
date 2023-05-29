@@ -2,8 +2,8 @@
 import unittest
 from unittest.mock import patch
 import sys
-import ai_interface
 sys.path.insert(0, '../src/')
+import ai_interface
 
 
 class TestAIInterface(unittest.TestCase):

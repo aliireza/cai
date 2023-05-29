@@ -29,40 +29,22 @@ def main():
 
     ai = AIInterface(args.ai)
 
-    compiler = CompilationCheck(args.language, args.compiler)
+    compiler = CompilationCheck(ai, args.language, args.compiler)
 
-    verifier = Verification()
+    verifier = Verification(compiler, ai)
 
-    performance_checker = PerformanceCheck(args.language) if args.performance else None
-
-    task_passed = False
+    performance_checker = PerformanceCheck(compiler, ai, args.language) if args.performance else None
 
     input_code = input_handler.read_code(args.input)
     input_task = args.task
-    compile_task = "If there is no main, add it and use this code/function."\
-        + "If there are compilation errors, fix all of them: "
-    verifier_task = "I got these errors from KLEE. Please fix all of them: "
     print(Fore.CYAN + "Input code:\n" + Style.RESET_ALL + input_code)
 
     # Ensure the input code is compilable before performing any other tasks
-    input_compilable = False
-    count = 0
-    while not input_compilable:
-        compilable, error = compiler.compile_code(input_code)
-        if not compilable:
-            print(Fore.RED + 'Compilation Error: ' + Style.RESET_ALL + error)
-            count = count + 1
-            print(Fore.YELLOW +
-                  '[' + str(count) + '] Attempting to fix compilation errors...'
-                  + Style.RESET_ALL)
-            input_code = ai.submit_task(compile_task + error, input_code)
-            continue
-        count = 0
-        input_compilable = True
-
+    compiler.check_and_fix(input_code, None)
     print(Fore.GREEN + "Input code is compilable" + Style.RESET_ALL)
     input_filename = os.path.basename(args.input)
-    temp_input = os.path.splitext(input_filename)[0] + "-compilable" + os.path.splitext(input_filename)[1]
+    temp_input = os.path.splitext(input_filename)[0] + "-compilable" \
+        + os.path.splitext(input_filename)[1]
     with open(temp_input, 'w') as f:
         f.write(input_code)
     print("Output code is written to "+temp_input)
@@ -71,50 +53,25 @@ def main():
     current_task = input_task
 
     # Peform the main task
-    while not task_passed:
-        print(Fore.CYAN + "Generating code for the input task: \n"
-              + current_task + Style.RESET_ALL)
-        generated_code = ai.submit_task(current_task, generated_code)
-        if (generated_code == ""):
-            return
+    print(Fore.CYAN + "Generating code for the input task: \n" + current_task + Style.RESET_ALL)
+    generated_code = ai.submit_task(current_task, generated_code)
+    if (generated_code == ""):
+        return
+    generated_code = compiler.check_and_fix(generated_code, None)
+    print(generated_code)
 
-        print(generated_code)
+    if args.verify:
+        print(Fore.YELLOW + "Verifying code..." + Style.RESET_ALL)
+        verifier.verify_and_fix(input_code, generated_code)
 
-        compilable, error = compiler.compile_code(generated_code)
-        if (error is not None):
-            print(error)
-        if not compilable:
-            generated_code = ai.submit_task(compile_task + error, generated_code)
-            continue
+    if args.performance:
+        print(Fore.YELLOW + "Checking performance..." + Style.RESET_ALL)
+        performance_checker.measure_and_fix(input_code, generated_code)
 
-        if args.verify:
-            print(Fore.YELLOW + "Verifying code..."
-                  + Style.RESET_ALL)
-            verification_passed, error = verifier.verify(compiler, ai, input_code, generated_code)
-            if not verification_passed:
-                print(Fore.RED + 'Verification Error: '
-                      + Style.RESET_ALL + error)
-                generated_code = ai.submit_task(verifier_task
-                                                + error, generated_code)
-                continue
-
-        if args.performance:
-            print(Fore.YELLOW + "Checking performance..." + Style.RESET_ALL)
-            if (performance_checker.code == ''):
-                performance_checker.generate_code(compiler, ai, input_code, generated_code)
-            print(performance_checker.code)
-            performance = performance_checker.measure_performance(generated_code)
-            if performance is None or performance < 1:  # Performance criteria not met
-                print('Performance criteria not met')
-                current_task = current_task + "performance criteria not met; improve again"
-                continue
-
-        task_passed = True
-
-        print(Fore.GREEN + 'Task passed all checks.\n\nOutput code:\n' + generated_code + Style.RESET_ALL)
-        with open(args.output, 'w') as f:
-            f.write(generated_code)
-        print("Output code is written to "+args.output)
+    print(Fore.GREEN + 'Output code:\n' + generated_code + Style.RESET_ALL)
+    with open(args.output, 'w') as f:
+        f.write(generated_code)
+    print("Output code is written to "+args.output)
 
 
 if __name__ == "__main__":

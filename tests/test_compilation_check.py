@@ -2,12 +2,12 @@
 import unittest
 import sys
 sys.path.insert(0, '../src/')
-
 from compilation_check import CompilationCheck
+
 
 class TestCompilationCheck(unittest.TestCase):
     def test_compile_code_c_gcc(self):
-        compiler = CompilationCheck('C','gcc')
+        compiler = CompilationCheck('C', 'gcc')
 
         # Test a compilable C code
         code = """
@@ -36,7 +36,7 @@ class TestCompilationCheck(unittest.TestCase):
         self.assertIsNotNone(error)
 
     def test_compile_code_cpp_gcc(self):
-        compiler = CompilationCheck('C++','g++')
+        compiler = CompilationCheck('C++', 'g++')
 
         # Test a compilable C++ code
         code = """
@@ -64,9 +64,8 @@ class TestCompilationCheck(unittest.TestCase):
         self.assertFalse(success)
         self.assertIsNotNone(error)
 
-
     def test_compile_code_c_clang(self):
-        compiler = CompilationCheck('C','clang')
+        compiler = CompilationCheck('C', 'clang')
 
         # Test a compilable C code
         code = """
@@ -95,7 +94,7 @@ class TestCompilationCheck(unittest.TestCase):
         self.assertIsNotNone(error)
 
     def test_compile_code_cpp_clang(self):
-        compiler = CompilationCheck('C++','clang++')
+        compiler = CompilationCheck('C++', 'clang++')
 
         # Test a compilable C++ code
         code = """

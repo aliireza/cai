@@ -1,9 +1,9 @@
 import subprocess
-from colorama import Fore, Back, Style
-from colorama import Fore, Back, Style
+from colorama import Fore, Style
+
 
 class CompilationCheck:
-    def __init__(self,lagnuage, compiler):
+    def __init__(self, lagnuage, compiler):
         self.language = lagnuage
         self.compiler = compiler
 
@@ -15,12 +15,18 @@ class CompilationCheck:
             f.write(code)
 
         if SE == 1:
-            compile_command = [ se_compiler, '-I', '/usr/local/include/klee/klee.h', '-emit-llvm', '-c', '-g', '-O0', '-Xclang', '-disable-O0-optnone', input_file, '-o', output_file]
+            compile_command = [se_compiler,
+                               '-I', '/usr/local/include/klee/klee.h',
+                               '-emit-llvm', '-c', '-g', '-O0', '-Xclang',
+                               '-disable-O0-optnone', input_file,
+                               '-o', output_file]
         else:
-                compile_command = [ self.compiler, input_file, '-o', output_file]
+            compile_command = [self.compiler, input_file,
+                               '-o', output_file]
 
         print(Fore.YELLOW + "Compiling code..." + Style.RESET_ALL)
-        process = subprocess.run(compile_command, text=True, capture_output=True)
+        process = subprocess.run(compile_command, text=True,
+                                 capture_output=True)
 
         if process.returncode != 0:  # Compilation error
             return False, process.stderr

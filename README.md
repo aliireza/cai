@@ -1,18 +1,59 @@
 # CodeAI (CAI): Code Optimization & Enhancement with AI [![Python Application](https://github.com/aliireza/cai/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/aliireza/cai/actions/workflows/ci.yml)
 
-A Python program that automatically changes an input C/C++ code, ensuring compilability, correctness, and performance.
-You should use a US VPN to interact with the BARD API (i.e., it is not supported in Sweden).
+CodeAI (CAI) is a Python program designed to optimize and enhance your C/C++ code. It leverages Large Language Models (LLMs) to automate code transformations, ensuring that the output code maintains its compilability, correctness, and performance. It can interact with Google BARD, OpenAI's GPT, and Microsoft Bing APIs. 
+
+**You should use a US VPN to interact with the BARD API (i.e., it is not supported in Sweden).**
+
+## Key Features:
+
+- **Automated Code Optimization:** CAI utilizes AI to refactor and optimize your existing code, potentially leading to more efficient and performant output.
+
+- **Compilability Assurance:** The transformed code is ensured to be compilable.
+
+- **Correctness Verification:** CAI verifies the functional equivalence of the original and transformed codes.
+
+- **Performance Measurement:** The application benchmarks and compares the performance of the original and transformed code, ensuring that the changes have improved performance.
+
 
 ## How to Use:
 
-Example:
+You can use the application by running the following command:
 ```bash
-python3 cai.py -i ../examples/2sum.cpp -o test.cpp -t "Improve the performance of the code and use the same main function as the original code" -l C++ -a BARD -c -comp gcc
+python3 cai.py -i <input_file> -o <output_file> -t <task> -l <language> -a <AI API> -c -comp <compiler>
 ```
+
+Where:
+
+- `<input_file>` is the path to the original code.
+- `<output_file>` is the path where the transformed code will be saved.
+- `<task>` is the task you want the AI to perform on the code.
+- `<language>` can be either C or C++.
+- `<AI API>` is the name of the AI API to use; it can be BARD, GPT, or BING.
+- `<compiler>` is the compiler to use for checking the compilability of the code, it can be gcc or g++.
+For example:
+
+```bash
+python cai.py -i ../examples/2sum.cpp -o test.cpp -t "Improve the performance of the code and use the same main function as the original code" -l C++ -a BARD -c -comp gcc
+```
+
+## Get API Key
+
+Check the following links for different LLMs:
+- bardapi: https://github.com/dsdanielpark/Bard-API/blob/main/assets/bard_api.gif
+- openai: https://platform.openai.com/account/api-keys 
+- EdgeGPT: https://github.com/acheong08/EdgeGPT#chatbot
 
 ## Testing
 
-Example
+You can test different classes by running the test units in the `tests/ folder, similar to the following command:
+
 ```bash
  python -m unittest test_ai_interface.py
 ```
+
+**TODO: Currently, they are not working properly.**
+
+
+## License
+
+CodeAI is released under the [GPL 3.0 License](./LICENSE).

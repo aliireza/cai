@@ -7,41 +7,46 @@ import os
 import sys
 
 
+# Abstract base class for all AI interfaces
 class AIInterface(abc.ABC):
     def __init__(self):
+        # Initialize AI with specific configurations
         self.init()
 
     @abc.abstractmethod
     def init(self):
+        # Each AI has its own specific initialization
         pass
 
     @abc.abstractmethod
     def submit_task(self, task, code, role=""):
+        # Submit a task to the AI service and return the response
         pass
 
     @abc.abstractmethod
     def get_code(self, response):
+        # Parse the response from the AI service to extract code
         pass
 
 
 class Bard(AIInterface):
     def init(self):
+        # Configure the BARD API key
         # os.environ['_BARD_API_KEY'] = "placeholder"
         bardapi.api_key = os.environ.get('_BARD_API_KEY', 'Not Set')
         self.bard = bardapi.core.Bard()
 
     def submit_task(self, task, code, role=""):
-        # Create a prompt
+        # Submit the task to BARD and handle the response
         prompt = task + "\n" + code
-        # Get response from BARD
         response = self.bard.get_answer(prompt)
-        # Extract the code from the response and return it
         if ('Error' in response.get('content')):
             print(Fore.RED + "Error in BARD API." + Style.RESET_ALL)
             sys.exit(1)
         return self.get_code(response.get('content'))
 
     def get_code(self, response):
+        # Parse the response from BARD to extract code
         index = response.find("```")
         code = response[index:].strip()
         index = code.find("c++")
@@ -53,6 +58,7 @@ class Bard(AIInterface):
 
 class GPT(AIInterface):
     def init(self):
+        # Configure the OpenAI GPT API key
         # os.environ['OPENAI_API_KEY'] = "placeholder"
         openai.api_key = os.environ.get('OPENAI_API_KEY', 'Not Set')
         self.gpt = openai
@@ -63,21 +69,20 @@ class GPT(AIInterface):
         self.submit_task("Always give me only code with syntax highlighting; for example ```c++ int main()```", "", "system")
 
     def submit_task(self, task, code, role="user"):
-        # Create a prompt
+        # Submit the task to GPT and handle the response
         prompt = task + "\n" + code
         messages = [{"role": role, "content": prompt}]
-        # Get response from GPT
         response = self.gpt.ChatCompletion.create(
             model=self.model,
             messages=messages,
             temperature=self.temperature,)
-        # Extract the code from the response and return it
         if ('Error' in response):
             print(Fore.RED + "Error in OpenAI API." + Style.RESET_ALL)
             sys.exit(1)
         return self.get_code(response.choices[0].message["content"])
 
     def get_code(self, response):
+        # Parse the response from GPT to extract code
         index = response.find("```")
         code = response[index:].strip()
         index = code.find("c++")
@@ -89,6 +94,7 @@ class GPT(AIInterface):
 
 class Bing(AIInterface):
     def init(self):
+        # Configure the Bing API
         os.environ['BING_U'] = ""
         self.bing = Query
         self.style = "precise"  # creative, balanced, or precise
@@ -101,21 +107,21 @@ class Bing(AIInterface):
         # echo_prompt - Print confirmation of the evaluated prompt
 
     def submit_task(self, task, code, role=""):
-        # Create a prompt
+        # Submit the task to Bing and handle the response
         prompt = task + "\n" + code
-        # Get response from Bing
         response = self.bing(prompt, self.style, self.content_type,
                              0, echo=False, echo_prompt=False)
-        # Extract the code from the response and return it
         if ('Error' in response.output):
             print(Fore.RED + "Error in Bing API." + Style.RESET_ALL)
             sys.exit(1)
         return self.get_code(response)
 
     def get_code(self, response):
+        # Parse the response from Bing to extract code
         return response.code
 
 
+# Function to build the AI interface based on the user's choice
 def AIBuilder(ai_choice):
     if ai_choice == 'BARD':
         return Bard()

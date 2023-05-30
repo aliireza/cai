@@ -44,8 +44,9 @@ def main():
     print(Fore.CYAN + "Input code:\n" + Style.RESET_ALL + input_code)
 
     # Ensure the input code is compilable before performing any other tasks
-    compiler.check_and_fix(input_code, None)
+    input_code = compiler.check_and_fix(input_code, None)
     print(Fore.GREEN + "Input code is compilable" + Style.RESET_ALL)
+    print(input_code)
 
     # Write input code to temporary file
     input_filename = os.path.basename(args.input)

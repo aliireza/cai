@@ -25,7 +25,9 @@ class CompilationCheck:
                                '-disable-O0-optnone', input_file,
                                '-o', output_file]
         else:
-            compile_command = [self.compiler, input_file,
+            compile_command = [self.compiler,
+                               # '-Wall', '-Wextra', '-Werror',
+                               input_file,
                                '-o', output_file]
 
         print(Fore.YELLOW + "Compiling code..." + Style.RESET_ALL)

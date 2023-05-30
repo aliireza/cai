@@ -19,7 +19,7 @@ CodeAI (CAI) is a Python program designed to optimize and enhance your C/C++ cod
 
 You can use the application by running the following command:
 ```bash
-python3 cai.py -i <input_file> -o <output_file> -t <task> -l <language> -a <AI API> -c -comp <compiler>
+python cai.py -i <input_file> -o <output_file> -t <task> -l <language> -a <AI API> -c -comp <compiler>
 ```
 
 Where:
@@ -52,6 +52,14 @@ You can test different classes by running the test units in the `tests/ folder, 
 ```
 
 **TODO: Currently, they are not working properly.**
+
+## How to Build
+
+You can build a python package using the following command:
+
+```bash
+python setup.py sdist bdist_wheel
+```
 
 
 ## License

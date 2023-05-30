@@ -1,5 +1,5 @@
 import input_handler
-from ai_interface import AIInterface
+from ai_interface import AIBuilder
 from compilation_check import CompilationCheck
 from verification import Verification
 from performance_check import PerformanceCheck
@@ -33,7 +33,7 @@ def main():
     args = input_handler.parse_arguments()
 
     # Initialize AI interface, compilation checker, verifier and performance checker
-    ai = AIInterface(args.ai)
+    ai = AIBuilder(args.ai)
     compiler = CompilationCheck(ai, args.language, args.compiler)
     verifier = Verification(compiler, ai)
     performance_checker = PerformanceCheck(compiler, ai, args.language) if args.performance else None

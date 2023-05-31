@@ -20,8 +20,7 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/aliireza/cai",
-    packages=setuptools.find_packages(where='src', exclude=['tests']),
-    package_dir={'': 'src'},
+    package_dir = {'': 'src'},
     package_data={},
     py_modules=['cai'],
     classifiers=[
@@ -32,7 +31,8 @@ setuptools.setup(
     python_requires='>=3.7',
     entry_points = {
               'console_scripts': [
-                  'cai=src.cai:main',
+                  'cai-run=cai:main',
+                  'cai-run.py=cai:main',
               ],
           },
 )

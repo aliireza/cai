@@ -31,6 +31,7 @@ class AIInterface(abc.ABC):
 
 class Bard(AIInterface):
     def init(self):
+        self.type = "BARD"
         # Configure the BARD API key
         # os.environ['_BARD_API_KEY'] = "placeholder"
         bardapi.api_key = os.environ.get('_BARD_API_KEY', 'Not Set')
@@ -58,6 +59,7 @@ class Bard(AIInterface):
 
 class GPT(AIInterface):
     def init(self):
+        self.type = "GPT"
         # Configure the OpenAI GPT API key
         # os.environ['OPENAI_API_KEY'] = "placeholder"
         openai.api_key = os.environ.get('OPENAI_API_KEY', 'Not Set')
@@ -94,6 +96,7 @@ class GPT(AIInterface):
 
 class Bing(AIInterface):
     def init(self):
+        self.type = "BING"
         # Configure the Bing API
         os.environ['BING_U'] = ""
         self.bing = Query

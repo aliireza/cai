@@ -3,8 +3,7 @@ import unittest
 from unittest.mock import patch
 import sys
 import argparse
-sys.path.insert(0, '../src/')
-import input_handler
+from src.input_handler import *
 
 
 class TestInputHandler(unittest.TestCase):
@@ -19,7 +18,7 @@ class TestInputHandler(unittest.TestCase):
                                                           ai='OpenAI',
                                                           task='task1',
                                                           input='input.c')
-        args = input_handler.parse_arguments()
+        args = parse_arguments()
         self.assertEqual(args.language, 'C')
         self.assertEqual(args.compile, True)
         self.assertEqual(args.compiler, 'gcc')

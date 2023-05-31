@@ -1,8 +1,12 @@
-import input_handler
-from ai_interface import AIBuilder
-from compilation_check import CompilationCheck
-from verification import Verification
-from performance_check import PerformanceCheck
+#!/usr/bin/env python3
+"""
+CAI Program
+"""
+from src.input_handler import *
+from src.ai_interface import AIBuilder
+from src.compilation_check import CompilationCheck
+from src.verification import Verification
+from src.performance_check import PerformanceCheck
 import subprocess
 import os
 from colorama import Fore, Style
@@ -30,7 +34,7 @@ def main():
         return
 
     # Parse arguments
-    args = input_handler.parse_arguments()
+    args = parse_arguments()
 
     # Initialize AI interface, compilation checker, verifier and performance checker
     ai = AIBuilder(args.ai)
@@ -39,7 +43,7 @@ def main():
     performance_checker = PerformanceCheck(compiler, ai, args.language) if args.performance else None
 
     # Read input code and print it
-    input_code = input_handler.read_code(args.input)
+    input_code = read_code(args.input)
     input_task = args.task
     print(Fore.CYAN + "Input code:\n" + Style.RESET_ALL + input_code)
 

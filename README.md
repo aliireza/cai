@@ -33,7 +33,7 @@ Where:
 For example:
 
 ```bash
-python cai.py -i ../examples/2sum.cpp -o test.cpp -t "Improve the performance of the code and use the same main function as the original code" -l C++ -a BARD -c -comp gcc
+cai-run -i ../examples/2sum.cpp -o test.cpp -t "Improve the performance of the code and use the same main function as the original code" -l C++ -a BARD -c -comp gcc
 ```
 
 **Note that you need to export `_BARD_API_KEY` and `OPENAI_API_KEY` variables in your operating system in order to use Bard and OpenAI's GPT. You can run the following command or add it to `.bashrc` or `.zshrc`:**
@@ -43,7 +43,7 @@ export _BARD_API_KEY="bard_api_key"
 export OPENAI_API_KEY="openai_api_key"
 ```
 
-**To use Bing, you should save the cookies in the `src/bing_cookies_1.json`. Check [Get API Key](#get-api-key) section for more information.**
+**To use Bing, you should save the cookies in the `bing_cookies_1.json`. Check [Get API Key](#get-api-key) section for more information.**
 
 ## Get API Key
 
@@ -68,6 +68,12 @@ You can build a python package using the following command:
 
 ```bash
 python setup.py sdist bdist_wheel
+```
+
+or 
+
+```bash
+pip install .
 ```
 
 

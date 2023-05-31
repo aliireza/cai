@@ -1,13 +1,12 @@
 # python -m unittest test_compilation_check.py
 import unittest
 import sys
-sys.path.insert(0, '../src/')
-from compilation_check import CompilationCheck
+from src.compilation_check import CompilationCheck
 
 
 class TestCompilationCheck(unittest.TestCase):
     def test_compile_code_c_gcc(self):
-        compiler = CompilationCheck('C', 'gcc')
+        compiler = CompilationCheck(None, 'C', 'gcc')
 
         # Test a compilable C code
         code = """
@@ -18,7 +17,7 @@ class TestCompilationCheck(unittest.TestCase):
             return 0;
         }
         """
-        success, error = compiler.compile_code(code)
+        success, error = compiler.compile_code(code, 'test')
         self.assertTrue(success)
         self.assertIsNone(error)
 
@@ -31,12 +30,12 @@ class TestCompilationCheck(unittest.TestCase):
             return 0;
         }
         """  # Missing semicolon
-        success, error = compiler.compile_code(code)
+        success, error = compiler.compile_code(code, 'test')
         self.assertFalse(success)
         self.assertIsNotNone(error)
 
     def test_compile_code_cpp_gcc(self):
-        compiler = CompilationCheck('C++', 'g++')
+        compiler = CompilationCheck(None, 'C++', 'g++')
 
         # Test a compilable C++ code
         code = """
@@ -47,7 +46,7 @@ class TestCompilationCheck(unittest.TestCase):
             return 0;
         }
         """
-        success, error = compiler.compile_code(code)
+        success, error = compiler.compile_code(code, 'test')
         self.assertTrue(success)
         self.assertIsNone(error)
 
@@ -60,12 +59,12 @@ class TestCompilationCheck(unittest.TestCase):
             return 0;
         }
         """  # Missing semicolon
-        success, error = compiler.compile_code(code)
+        success, error = compiler.compile_code(code, 'test')
         self.assertFalse(success)
         self.assertIsNotNone(error)
 
     def test_compile_code_c_clang(self):
-        compiler = CompilationCheck('C', 'clang')
+        compiler = CompilationCheck(None, 'C', 'clang')
 
         # Test a compilable C code
         code = """
@@ -76,7 +75,7 @@ class TestCompilationCheck(unittest.TestCase):
             return 0;
         }
         """
-        success, error = compiler.compile_code(code)
+        success, error = compiler.compile_code(code, 'test')
         self.assertTrue(success)
         self.assertIsNone(error)
 
@@ -89,12 +88,12 @@ class TestCompilationCheck(unittest.TestCase):
             return 0;
         }
         """  # Missing semicolon
-        success, error = compiler.compile_code(code)
+        success, error = compiler.compile_code(code, 'test')
         self.assertFalse(success)
         self.assertIsNotNone(error)
 
     def test_compile_code_cpp_clang(self):
-        compiler = CompilationCheck('C++', 'clang++')
+        compiler = CompilationCheck(None, 'C++', 'clang++')
 
         # Test a compilable C++ code
         code = """
@@ -105,7 +104,7 @@ class TestCompilationCheck(unittest.TestCase):
             return 0;
         }
         """
-        success, error = compiler.compile_code(code)
+        success, error = compiler.compile_code(code, 'test')
         self.assertTrue(success)
         self.assertIsNone(error)
 
@@ -118,7 +117,7 @@ class TestCompilationCheck(unittest.TestCase):
             return 0;
         }
         """  # Missing semicolon
-        success, error = compiler.compile_code(code)
+        success, error = compiler.compile_code(code, 'test')
         self.assertFalse(success)
         self.assertIsNotNone(error)
 

@@ -19,7 +19,7 @@ CodeAI (CAI) is a Python program designed to optimize and enhance your C/C++ cod
 
 You can use the application by running the following command:
 ```bash
-python cai.py -i <input_file> -o <output_file> -t <task> -l <language> -a <AI API> -c -comp <compiler>
+cai-run -i <input_file> -o <output_file> -t <task> -l <language> -a <AI API> -c -comp <compiler>
 ```
 
 Where:
@@ -33,8 +33,10 @@ Where:
 For example:
 
 ```bash
-cai-run -i ../examples/2sum.cpp -o test.cpp -t "Improve the performance of the code and use the same main function as the original code" -l C++ -a BARD -c -comp gcc
+cai-run -i examples/2sum.cpp -o test.cpp -t "Improve the performance of the code and use the same main function as the original code" -l C++ -a BARD -c -comp gcc
 ```
+
+Alternatively, you can also run `python cai.py`.
 
 **Note that you need to export `_BARD_API_KEY` and `OPENAI_API_KEY` variables in your operating system in order to use Bard and OpenAI's GPT. You can run the following command or add it to `.bashrc` or `.zshrc`:**
 

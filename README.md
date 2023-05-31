@@ -2,7 +2,7 @@
 
 CodeAI (CAI) is a Python program designed to optimize and enhance your C/C++ code. It leverages Large Language Models (LLMs) to automate code transformations, ensuring that the output code maintains its compilability, correctness, and performance. It can interact with Google BARD, OpenAI's GPT, and Microsoft Bing APIs. 
 
-**You should use a US VPN to interact with the BARD API (i.e., it is not supported in Sweden).**
+**BARD API is not currently supported in Sweden.**
 
 ## Key Features:
 

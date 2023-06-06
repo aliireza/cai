@@ -19,7 +19,7 @@ class AIInterface(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def submit_task(self, task, code, role=""):
+    def submit_task(self, task, code=None, role=""):
         # Submit a task to the AI service and return the response
         pass
 
@@ -37,14 +37,19 @@ class Bard(AIInterface):
         bardapi.api_key = os.environ.get('_BARD_API_KEY', 'Not Set')
         self.bard = bardapi.core.Bard()
 
-    def submit_task(self, task, code, role=""):
+    def submit_task(self, task, code=None, role=""):
         # Submit the task to BARD and handle the response
-        prompt = task + "\n" + code
+        prompt = task
+        if code is not None:
+            prompt = prompt + "\n" + code
         response = self.bard.get_answer(prompt)
         if ('Error' in response.get('content')):
             print(Fore.RED + "Error in BARD API." + Style.RESET_ALL)
             sys.exit(1)
-        return self.get_code(response.get('content'))
+        if code is not None:
+            return self.get_code(response.get('content'))
+        else:
+            return response.get('content')
 
     def get_code(self, response):
         # Parse the response from BARD to extract code
@@ -70,9 +75,11 @@ class GPT(AIInterface):
         self.temperature = 0
         self.submit_task("Always give me only code with syntax highlighting; for example ```c++ int main()```", "", "system")
 
-    def submit_task(self, task, code, role="user"):
+    def submit_task(self, task, code=None, role="user"):
         # Submit the task to GPT and handle the response
-        prompt = task + "\n" + code
+        prompt = task
+        if code is not None:
+            prompt = prompt + "\n" + code
         messages = [{"role": role, "content": prompt}]
         response = self.gpt.ChatCompletion.create(
             model=self.model,
@@ -81,7 +88,10 @@ class GPT(AIInterface):
         if ('Error' in response):
             print(Fore.RED + "Error in OpenAI API." + Style.RESET_ALL)
             sys.exit(1)
-        return self.get_code(response.choices[0].message["content"])
+        if code is not None:
+            return self.get_code(response.choices[0].message["content"])
+        else:
+            return response.choices[0].message["content"]
 
     def get_code(self, response):
         # Parse the response from GPT to extract code
@@ -109,15 +119,20 @@ class Bing(AIInterface):
         # echo - Print something to confirm request made
         # echo_prompt - Print confirmation of the evaluated prompt
 
-    def submit_task(self, task, code, role=""):
+    def submit_task(self, task, code=None, role=""):
         # Submit the task to Bing and handle the response
-        prompt = task + "\n" + code
+        prompt = task
+        if code is not None:
+            prompt = prompt + "\n" + code
         response = self.bing(prompt, self.style, self.content_type,
                              0, echo=False, echo_prompt=False)
         if ('Error' in response.output):
             print(Fore.RED + "Error in Bing API." + Style.RESET_ALL)
             sys.exit(1)
-        return self.get_code(response)
+        if code is not None:
+            return self.get_code(response)
+        else:
+            return response.output
 
     def get_code(self, response):
         # Parse the response from Bing to extract code

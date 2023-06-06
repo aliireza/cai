@@ -20,9 +20,9 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/aliireza/cai",
-    package_dir = {'': 'src'},
+    packages=setuptools.find_packages(),
     package_data={},
-    py_modules=['cai'],
+    py_modules=['cai_run'],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: GPL-3.0 license",
@@ -31,8 +31,8 @@ setuptools.setup(
     python_requires='>=3.7',
     entry_points = {
               'console_scripts': [
-                  'cai-run=cai:main',
-                  'cai-run.py=cai:main',
+                  'cai-run=cai_run:main',
+                  'cai-run.py=cai_run:main',
               ],
           },
 )

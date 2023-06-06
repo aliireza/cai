@@ -2,7 +2,7 @@
 import unittest
 from unittest.mock import patch
 import sys
-import src.verification
+import cai.verification
 
 
 # class TestVerification(unittest.TestCase):

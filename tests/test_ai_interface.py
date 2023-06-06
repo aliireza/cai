@@ -2,7 +2,7 @@
 import unittest
 from unittest.mock import patch
 import sys
-from src.ai_interface import *
+from cai.ai_interface import *
 
 
 # class TestAIInterface(unittest.TestCase):

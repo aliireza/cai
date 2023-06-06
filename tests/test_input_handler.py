@@ -3,7 +3,7 @@ import unittest
 from unittest.mock import patch
 import sys
 import argparse
-from src.input_handler import *
+from cai.input_handler import *
 
 
 class TestInputHandler(unittest.TestCase):

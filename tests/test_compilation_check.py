@@ -1,7 +1,7 @@
 # python -m unittest test_compilation_check.py
 import unittest
 import sys
-from src.compilation_check import CompilationCheck
+from cai.compilation_check import CompilationCheck
 
 
 class TestCompilationCheck(unittest.TestCase):

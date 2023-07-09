@@ -9,12 +9,12 @@ import sys
 
 # Abstract base class for all AI interfaces
 class AIInterface(abc.ABC):
-    def __init__(self):
+    def __init__(self, version=0):
         # Initialize AI with specific configurations
-        self.init()
+        self.init(version)
 
     @abc.abstractmethod
-    def init(self):
+    def init(self, version):
         # Each AI has its own specific initialization
         pass
 
@@ -30,7 +30,7 @@ class AIInterface(abc.ABC):
 
 
 class Bard(AIInterface):
-    def init(self):
+    def init(self, version):
         self.type = "BARD"
         # Configure the BARD API key
         # os.environ['_BARD_API_KEY'] = "placeholder"
@@ -63,17 +63,22 @@ class Bard(AIInterface):
 
 
 class GPT(AIInterface):
-    def init(self):
+    def init(self, version):
         self.type = "GPT"
+        self.version = version
         # Configure the OpenAI GPT API key
         # os.environ['OPENAI_API_KEY'] = "placeholder"
         openai.api_key = os.environ.get('OPENAI_API_KEY', 'Not Set')
         self.gpt = openai
-        self.model = "gpt-3.5-turbo"
+        if(version == 3.5):
+            self.model = "gpt-3.5-turbo"
+        elif(version == 4):
+            self.model = "gpt-4"
         '''A temperature of 0 means the responses will be very straightforward, almost deterministic (meaning you almost always get the same response to a given prompt)
         A temperature of 1 means the responses can vary wildly.'''
         self.temperature = 0
-        self.submit_task("Always give me only code with syntax highlighting; for example ```c++ int main()```", "", "system")
+        #self.submit_task("Always give me only code with syntax highlighting; for example ```c++ int main()```", "", "system")
+        self.submit_task("return only code; nothing else","","system")
 
     def submit_task(self, task, code=None, role="user"):
         # Submit the task to GPT and handle the response
@@ -97,7 +102,7 @@ class GPT(AIInterface):
         # Parse the response from GPT to extract code
         index = response.find("```")
         code = response[index:].strip()
-        index = code.find("c++")
+        index = code.find("cpp")
         code = code[index+3:].strip()
         index = code.find("```")
         code = code[:index].strip()
@@ -105,7 +110,7 @@ class GPT(AIInterface):
 
 
 class Bing(AIInterface):
-    def init(self):
+    def init(self, version):
         self.type = "BING"
         # Configure the Bing API
         os.environ['BING_U'] = ""
@@ -145,5 +150,7 @@ def AIBuilder(ai_choice):
         return Bard()
     elif ai_choice == 'BING':
         return Bing()
-    elif ai_choice == 'GPT':
-        return GPT()
+    elif ai_choice == 'GPT-3.5':
+        return GPT(3.5)
+    elif ai_choice == 'GPT-4':
+        return GPT(4)

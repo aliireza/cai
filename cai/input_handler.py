@@ -13,7 +13,7 @@ def parse_arguments():
                         choices=['C', 'C++'], default='C++',
                         help='Language of the code')
     parser.add_argument('-a', '--ai', type=str, required=False,
-                        choices=['GPT', 'BARD', 'BING'], default='BARD',
+                        choices=['GPT-3.5', 'GPT-4', 'BARD', 'BING'], default='BARD',
                         help='Choice of AI')
     parser.add_argument('-c', '--compile', action='store_true', default=True,
                         help='Enable compilation check')
